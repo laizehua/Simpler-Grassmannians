@@ -1,6 +1,6 @@
 # Simpler-Grassmannians
 
-This is the working code for the paper "Simpler Grassmannian optimization".
+This is the working code for the paper "Simpler Grassmannian optimization" by Zehua Lai, Lek-Heng Lim and Ke Ye.
 
 The code is written for sole purpose of conducting experiments of our paper and therefore we did not utilize any existing manifold optimization package (pymanopt for example). It is possible if I have used those existing packages, the code will be much cleaner and can be used for more general problems.
 
