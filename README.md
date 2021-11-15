@@ -6,4 +6,6 @@ The code is written for sole purpose of conducting experiments of our paper and 
 
 As a result, the current code is totally not satisfactory. The code use 4 different classes to solve 2 specific problems by 2 different framework. The formula derived in the paper only works for 2k<= n. So the code only works for the case 2k<= n.
 
+main is for the plots. main2 is for the wall time.
+
 If you have any problems. Please contact <laizehua@uchicago.edu>
