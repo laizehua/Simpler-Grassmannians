@@ -95,14 +95,12 @@ class EAS_trace_opt:
         return Y
 
     def EAS_BB_gradient(self, Y_0, t, orthogonalize = False):
-        Ylist = []
         Y=Y_0
         G_old = self.EAS_gradient(Y)
         S = -G_old
         U, s, V =  self.svd_compact(S)
         G_old = self.EAS_transport_svd(Y, U, s, V, G_old)
         Y = self.EAS_geodesic_svd(Y, U, s, V)
-        Ylist.append(Y)
         for i in range(t):
             G_new = self.EAS_gradient(Y)
             alpha = np.sum(np.multiply(G_new-G_old,S))/np.sum(np.multiply(G_new-G_old,G_new-G_old))
@@ -110,21 +108,18 @@ class EAS_trace_opt:
             U, s, V =  self.svd_compact(S)
             G_old = self.EAS_transport_svd(Y, U, s, V, G_new)
             Y = self.EAS_geodesic_svd(Y, U, s, V)
-            Ylist.append(Y)
             if orthogonalize == True:
                 Y = orthogonalized(Y)
-        return Y, Ylist
+        return Y
 
     def EAS_conjugate_gradient(self, Y_0, t, reset, orthogonalize = False):
         # Reset the conjugate gradient to the true gradient after $reset$ steps.
-        Ylist = []
         Y_old = Y_0
         G_old = self.EAS_gradient(Y_old)
         P = -G_old
         for i in range(t):
             U, s, V =  self.svd_compact(P)
             s, Y_new = self.EAS_armijo_linesearch_svd(Y_old, U, s, V)
-            Ylist.append(Y_new)
             if orthogonalize == True:
                 Y_new = orthogonalized(Y_new)
             G_old = self.EAS_transport_svd(Y_old, U, s, V, G_old)
@@ -136,7 +131,7 @@ class EAS_trace_opt:
             Y_old = Y_new      
             if i%reset == reset-1:
                 P=-G_new
-        return Y_new, Ylist
+        return Y_new
     
     def EAS_Newton(self, Y_0, t, orthogonalize = False):
         Y = Y_0
@@ -193,13 +188,11 @@ class Simpler_trace_opt:
         return Q
 
     def simpler_BB_gradient(self, Q_0, t):
-        Qlist = []
         Q=Q_0
         G_old = self.simpler_gradient(Q)
         S = -G_old
         U, s, V =  linalg.svd(S)
         Q = self.simpler_geodesic_svd(Q, U, s, V)
-        Qlist.append(Q)
         for i in range(t):
             G_new = self.simpler_gradient(Q)
             alpha = np.sum(np.multiply(G_new-G_old,S))/np.sum(np.multiply(G_new-G_old,G_new-G_old))
@@ -207,18 +200,15 @@ class Simpler_trace_opt:
             U, s, V =  linalg.svd(S)
             G_old = G_new
             Q = self.simpler_geodesic_svd(Q, U, s, V)
-            Qlist.append(Q)
-        return Q, Qlist
+        return Q
     
     def simpler_conjugate_gradient(self, Q_0, t, reset):
         Q_old = Q_0
-        Qlist = []
         G_old = self.simpler_gradient(Q_old)
         P = -G_old
         for i in range(t):
             U, s, V =  linalg.svd(P)
             s, Q_new = self.simpler_armijo_linesearch_svd(Q_old, U, s, V)
-            Qlist.append(Q_new)
             G_new = self.simpler_gradient(Q_new)
             gamma = np.sum(np.multiply(G_new-G_old,G_new))/np.sum(np.multiply(G_old,G_old))
             P = -G_new+gamma*P
@@ -226,7 +216,7 @@ class Simpler_trace_opt:
             Q_old = Q_new 
             if i%reset == reset-1:
                 P=-G_new
-        return Q_new, Qlist
+        return Q_new
 
     def simpler_Newton(self, Q_0, t):
         Q = Q_0
@@ -329,14 +319,12 @@ class EAS_Frechet_opt:
         return Y
 
     def EAS_BB_gradient(self, Y_0, t, orthogonalize = False):
-        Ylist = []
         Y=Y_0
         G_old = self.EAS_gradient(Y)
         S = -G_old
         U, s, V =  self.svd_compact(S)
         G_old = self.EAS_transport_svd(Y, U, s, V, G_old)
         Y = self.EAS_geodesic_svd(Y, U, s, V)
-        Ylist.append(Y)
         for i in range(t):
             G_new = self.EAS_gradient(Y)
             alpha = np.sum(np.multiply(G_new-G_old,S))/np.sum(np.multiply(G_new-G_old,G_new-G_old))
@@ -344,20 +332,17 @@ class EAS_Frechet_opt:
             U, s, V =  self.svd_compact(S)
             G_old = self.EAS_transport_svd(Y, U, s, V, G_new)
             Y = self.EAS_geodesic_svd(Y, U, s, V)
-            Ylist.append(Y)
             if orthogonalize == True:
                 Y = orthogonalized(Y)
-        return Y, Ylist
+        return Y
 
     def EAS_conjugate_gradient(self, Y_0, t, reset, orthogonalize = False):
-        Ylist = []
         Y_old = Y_0
         G_old = self.EAS_gradient(Y_old)
         P = -G_old
         for i in range(t):
             U, s, V =  self.svd_compact(P)
             s, Y_new = self.EAS_armijo_linesearch_svd(Y_old, U, s, V)
-            Ylist.append(Y_new)
             if orthogonalize == True:
                 Y_new = orthogonalized(Y_new)
             G_old = self.EAS_transport_svd(Y_old, U, s, V, G_old)
@@ -369,7 +354,7 @@ class EAS_Frechet_opt:
             Y_old = Y_new      
             if i%reset == reset-1:
                 P=-G_new
-        return Y_new, Ylist
+        return Y_new
     
     def EAS_Newton(self, Y_0, t, orthogonalize = False):
         Y = Y_0
@@ -448,13 +433,11 @@ class Simpler_Frechet_opt:
         return Q
 
     def simpler_BB_gradient(self, Q_0, t):
-        Qlist = []
         Q=Q_0
         G_old = self.simpler_gradient(Q)
         S = -G_old
         U, s, V =  linalg.svd(S)
         Q = self.simpler_geodesic_svd(Q, U, s, V)
-        Qlist.append(Q)
         for i in range(t):
             G_new = self.simpler_gradient(Q)
             alpha = np.sum(np.multiply(G_new-G_old,S))/np.sum(np.multiply(G_new-G_old,G_new-G_old))
@@ -462,18 +445,15 @@ class Simpler_Frechet_opt:
             U, s, V =  linalg.svd(S)
             G_old = G_new
             Q = self.simpler_geodesic_svd(Q, U, s, V)
-            Qlist.append(Q)
-        return Q, Qlist
+        return Q
 
     def simpler_conjugate_gradient(self, Q_0, t, reset):
         Q_old = Q_0
-        Qlist = []
         G_old = self.simpler_gradient(Q_old)
         P = -G_old
         for i in range(t):
             U, s, V =  linalg.svd(P)
             s, Q_new = self.simpler_armijo_linesearch_svd(Q_old, U, s, V)
-            Qlist.append(Q_new)
             G_new = self.simpler_gradient(Q_new)
             gamma = np.sum(np.multiply(G_new-G_old,G_new))/np.sum(np.multiply(G_old,G_old))
             P = -G_new+gamma*P
@@ -481,7 +461,7 @@ class Simpler_Frechet_opt:
             Q_old = Q_new 
             if i%reset == reset-1:
                 P=-G_new
-        return Q_new, Qlist
+        return Q_new
 
     def simpler_Newton(self, Q_0, t):
         Q = Q_0

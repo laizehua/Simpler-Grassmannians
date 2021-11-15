@@ -27,8 +27,8 @@ opt = sum(w[:m])
 Y_opt = v[:,:m]
 test_model_2 = Simpler_trace_opt(m, n, A)
 
-Y_0 = test_model_1.EAS_steepest_gradient(Y_0, 20, orthogonalize = True)
-Q_0 = test_model_2.simpler_steepest_gradient(Q_0, 20)
+Y_0 = test_model_1.EAS_steepest_gradient(Y_0, 10, orthogonalize = True)
+Q_0 = test_model_2.simpler_steepest_gradient(Q_0, 10)
 
 """
 This is the code for Figure 1. To get an orthogonalized version of EAS, add parameter "orthogonalize = True" in every EAS function.
@@ -409,80 +409,6 @@ line, = ax1.plot(range(101),error_list, label='CG')
 ax1.legend(loc = 'right')
 
 
-
-"""
-This is the plot of function value of the two models. It does not mean much.
-"""
-
-fig, (ax, ax1) = plt.subplots(ncols=2, constrained_layout=True,  dpi=400)
-ax.set_xlim(0, 100)
-ax.set_xticks(range(0, 101, 10))
-ax.set_ylim(2, 10)
-ax.set_xlabel('iterations')
-ax.set_ylabel(r'$f(Y_i)$')
-ax.set_title('Stiefel model')
-
-error_list = []
-Y=Y_0
-error_list.append(2*test_model_1.EAS_function(Y))
-for i in range(100):
-    Y = test_model_1.EAS_steepest_gradient(Y, 1)
-    error_list.append(2*test_model_1.EAS_function(Y))
-line, = ax.plot(range(101),error_list, label='GD')  
-
-
-error_list = []
-Y=Y_0
-error_list.append(2*test_model_1.EAS_function(Y))
-Y, Ylist = test_model_1.EAS_BB_gradient(Y, 99)
-for Y in Ylist:
-    error_list.append(2*test_model_1.EAS_function(Y))
-line, = ax.plot(range(101),error_list, label='BB') 
-
-
-error_list = []
-Y=Y_0
-error_list.append(2*test_model_1.EAS_function(Y))
-Y, Ylist = test_model_1.EAS_conjugate_gradient(Y, 100, m*n)
-for Y in Ylist:
-    error_list.append(2*test_model_1.EAS_function(Y))
-line, = ax.plot(range(101),error_list, label='CG') 
-ax.legend()
-
-
-ax1.set_xlim(0, 100)
-ax1.set_xticks(range(0, 101, 10))
-
-ax1.set_xlabel('iterations')
-ax1.set_ylabel(r'$f(Q_i)$')
-ax1.set_title('Involution model')
-
-error_list = []
-Q=Q_0
-error_list.append(test_model_2.simpler_function(Q))
-for i in range(100):
-    Q = test_model_2.simpler_steepest_gradient(Q, 1)
-    error_list.append(test_model_2.simpler_function(Q))
-line, = ax1.plot(range(101),error_list, label='GD') 
-
-
-error_list = []
-Q=Q_0
-error_list.append(test_model_2.simpler_function(Q))
-Q, Qlist = test_model_2.simpler_BB_gradient(Q, 99)
-for Q in Qlist:
-    error_list.append(test_model_2.simpler_function(Q))
-line, = ax1.plot(range(101),error_list, label='BB') 
- 
-
-error_list = []
-Q=Q_0
-error_list.append(test_model_2.simpler_function(Q))
-Q, Qlist = test_model_2.simpler_conjugate_gradient(Q, 100, m*n)
-for Q in Qlist:
-    error_list.append(test_model_2.simpler_function(Q))
-line, = ax1.plot(range(101),error_list, label='CG') 
-ax1.legend(loc = 'right')
 
 
     
